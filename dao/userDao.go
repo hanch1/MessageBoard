@@ -3,7 +3,6 @@ package dao
 import (
 	db "app1/database"
 	"app1/model"
-	"fmt"
 )
 
 func GetUserByNameAndPassword(username string, password string) (*model.User, error) {

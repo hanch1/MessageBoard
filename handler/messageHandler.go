@@ -62,11 +62,10 @@ func AddMsg(c *gin.Context) {
 		})
 		return
 	}
-	// 从cookie中获取用户id   %07
+	// 从cookie中获取用户id
 	id := getUidFromCookie(cookie.Value)
-	username, _ := dao.GetUsernameByUid(id)
 	msg := &model.Message{
-		UserName: username,
+		Uid: id,
 		Content:  content,
 		Time:     time.Now().Format("2006-01-02 15:04:05"),
 	}

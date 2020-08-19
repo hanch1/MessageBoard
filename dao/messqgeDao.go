@@ -10,7 +10,7 @@ func GetMessages(pageIndex int, pageSize int) ([]*model.Message, error) {
 	limit := (pageIndex - 1) * pageSize
 
 	//写sql语句
-	sqlStr := "select id,username,content,time from message limit ?,? "
+	sqlStr := "select m.id, u.username, m.content, m.time from message m, user u where m.uid = u.id limit ?,? "
 	//执行
 	rows, err := db.SqlDB.Query(sqlStr, limit, pageSize)
 	if err != nil {
@@ -26,8 +26,8 @@ func GetMessages(pageIndex int, pageSize int) ([]*model.Message, error) {
 }
 
 func AddMessage(msg *model.Message) error {
-	slqStr := "insert into message(username,content,time) values(?,?,?)"
-	_, err := db.SqlDB.Exec(slqStr, msg.UserName, msg.Content, msg.Time)
+	slqStr := "insert into message(uid,content,time) values(?,?,?)"
+	_, err := db.SqlDB.Exec(slqStr, msg.Uid, msg.Content, msg.Time)
 	if err != nil {
 		return err
 	}
