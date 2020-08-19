@@ -50,10 +50,7 @@ func AddMsg(c *gin.Context) {
 	flag := c.Request.FormValue("isCheck")
 	// 开启关键词屏蔽
 	if flag == "true" {
-		t := util.NewTrie()
-		t.Insert("警察")
-		t.Insert("枪支")
-		t.Insert("垃圾")
+		t := addKeyWords()
 		content = t.Replace(content)
 	}
 	if len(content) == 0 {
@@ -86,4 +83,13 @@ func getUidFromCookie(cookie string) int {
 	str := cookie[1:]
 	id, _ := strconv.Atoi(string(str))
 	return id
+}
+// 关键词屏蔽
+func addKeyWords() util.Trie{
+	t := util.NewTrie()
+	t.Insert("警察")
+	t.Insert("枪支")
+	t.Insert("枪")
+	t.Insert("垃圾")
+	return t
 }

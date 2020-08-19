@@ -42,73 +42,46 @@ func (this *Trie) Insert(txt string) {
 	node.End = true
 }
 
-func (this *Trie) IsExist(txt string) bool {
-	if len(txt) < 1 {
-		return false
+func (trie *Trie) Replace(content string) string {
+	if len(content) < 1 {
+		return content
 	}
-	node := this.Root
-	key := []rune(txt)
-	var chars []rune = nil
-	slen := len(key)
-	for i := 0; i < slen; i++ {
+	node := trie.Root
+	key := []rune(content)
+	var tmp []rune = nil
+	len := len(key)
+	for i := 0; i < len; i++ {
 		if _, exists := node.Children[key[i]]; exists {
 			node = node.Children[key[i]]
-			for j := i + 1; j < slen; j++ {
-				if _, exists := node.Children[key[j]]; exists {
-					node = node.Children[key[j]]
-					if node.End == true {
-						if chars == nil {
-							chars = key
-						}
-						for t := i; t <= j; t++ {
-							return true
-						}
-						i = j
-						node = this.Root
-						break
-					}
-				}
+			if node.End == true{
+				tmp = key
+				c, _ := utf8.DecodeRuneInString("*")
+				tmp[i] = c
 			}
-			node = this.Root
-		}
-	}
-	return false
-}
-
-func (this *Trie) Replace(txt string) string {
-	if len(txt) < 1 {
-		return txt
-	}
-	node := this.Root
-	key := []rune(txt)
-	var chars []rune = nil
-	slen := len(key)
-	for i := 0; i < slen; i++ {
-		if _, exists := node.Children[key[i]]; exists {
-			node = node.Children[key[i]]
-			for j := i + 1; j < slen; j++ {
+			for j := i + 1; j < len; j++ {
 				if _, exists := node.Children[key[j]]; exists {
 					node = node.Children[key[j]]
 					if node.End == true {
-						if chars == nil {
-							chars = key
+						if tmp == nil {
+							tmp = key
 						}
+						// 修改屏蔽词
 						for t := i; t <= j; t++ {
 							c, _ := utf8.DecodeRuneInString("*")
-							chars[t] = c
+							tmp[t] = c
 						}
 						i = j
-						node = this.Root
+						node = trie.Root
 						break
 					}
 				}
 			}
-			node = this.Root
+			node = trie.Root
 		}
 	}
-	if chars == nil {
-		return txt
+	if tmp == nil {
+		return content
 	} else {
-		return string(chars)
+		return string(tmp)
 	}
 }
